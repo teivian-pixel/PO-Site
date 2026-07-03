@@ -1,0 +1,143 @@
+{
+  "project_name": "Primal Origins Redesign (Hybrid Coaching + Echo Dating App)",
+  "design_vision": "A single-page experience blending two distinct visual worlds. The top half (Primal Origins) uses a warm, premium, editorial aesthetic (Archetype 1 + 5). The bottom half (Echo) abruptly shifts into a highly secure, dark, tech-forward 'Clicksphone Communicator' aesthetic (Archetype 7 + 2).",
+  "theme_strategy": "Dual-Theme (Light top, Dark bottom)",
+  "archetypes": {
+    "primal_origins": {
+      "name": "Organic & Earthy + Luxury",
+      "reasoning": "Life and relationship coaching requires warmth, human-centric trust, and an elevated premium feel. Flat minimalist white is too sterile; we need textured warmth."
+    },
+    "echo": {
+      "name": "Electric & Neon + Performance Pro",
+      "reasoning": "High-accountability dating app in beta. Inspired by the Clicksphone communicator—sleek, modern, dark, tactile telecom aesthetic. Dark mode conveys security, exclusivity, and tech-forward calculation."
+    }
+  },
+  "colors": {
+    "primal_origins_light_mode": {
+      "background": "#F9F8F6",
+      "surface": "#FFFFFF",
+      "text_primary": "#1C1917",
+      "text_secondary": "#57534E",
+      "accent_primary": "#9A3412",
+      "border": "#E7E5E4"
+    },
+    "echo_dark_mode": {
+      "background": "#09090B",
+      "surface": "#18181B",
+      "surface_elevated": "#27272A",
+      "text_primary": "#FAFAFA",
+      "text_secondary": "#A1A1AA",
+      "accent_primary": "#00E5FF",
+      "accent_glow": "#FFB000",
+      "border": "#27272A"
+    }
+  },
+  "typography": {
+    "primal_origins": {
+      "headings": {
+        "family": "Playfair Display",
+        "style": "font-serif tracking-tight text-stone-900"
+      },
+      "body": {
+        "family": "Outfit",
+        "style": "font-sans leading-relaxed text-stone-600"
+      }
+    },
+    "echo": {
+      "headings": {
+        "family": "Unbounded",
+        "style": "font-sans font-black tracking-tighter text-white"
+      },
+      "body": {
+        "family": "Chivo",
+        "style": "font-sans leading-relaxed text-zinc-400"
+      }
+    },
+    "scale_rules": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl",
+      "h3": "text-xl sm:text-2xl",
+      "body": "text-base",
+      "labels": "text-xs tracking-[0.2em] uppercase"
+    }
+  },
+  "spacing_and_layout": {
+    "primal_origins": {
+      "grid_mode": "MODE A: THE 'TETRIS' GRID",
+      "gap": "gap-12",
+      "padding": "py-24 px-6 md:px-12",
+      "philosophy": "Generous spacing. Overlapping images with text boxes. Use p-12 inside cards with soft rounded-2xl corners."
+    },
+    "echo": {
+      "grid_mode": "MODE B: THE 'CONTROL ROOM' GRID",
+      "gap": "gap-6",
+      "padding": "py-32 px-6 md:px-12",
+      "philosophy": "Strict grid hierarchy. Density. Every pixel utilized. Sharp edges (rounded-none or max rounded-md). 1px visible borders on everything to simulate telecom hardware interfaces."
+    }
+  },
+  "surfaces_and_materials": {
+    "global_nav": "Crystal Glass (bg-black/60 backdrop-blur-xl border-b border-white/10). Works universally across light and dark sections.",
+    "echo_cards": "The Tracing Beam + Neumorphism hybrid. Flat zinc surfaces (bg-zinc-900) with 1px border-zinc-800, glowing cyan hover states, and 'hardware-like' inner shadows.",
+    "primal_origins_cards": "Flat solid surfaces. Soft drop shadows (shadow-xl shadow-stone-200/50), warm white backgrounds."
+  },
+  "components": {
+    "global_navigation": {
+      "description": "Sticky top nav. z-50. Floating pill or full width glass.",
+      "links": ["Home", "Coaching/Methodology", "Echo", "About", "Contact"],
+      "interaction": "Smooth scroll anchor links. Links must have high contrast hover states."
+    },
+    "primal_origins_hero": {
+      "description": "Editorial split layout. Left: Massive serif headline, terracotta CTA button. Right: Asymmetrical image collage.",
+      "cta": "Solid Terracotta background, white text. Rounded corners. 'Book a Free Consultation'"
+    },
+    "primal_origins_methodology": {
+      "description": "Bento Grid layout. Alternating text and imagery. Organic shapes.",
+      "cards": "White background, no borders, soft drop shadow."
+    },
+    "primal_origins_testimonials": {
+      "description": "The 'Editorial Ribbon' Marquee. Very slow smooth drift.",
+      "style": "Pale Sand background, deep olive serif text. gap-32 between reviews."
+    },
+    "echo_hero": {
+      "description": "The transition to Dark Mode. Massive stark contrast. Deep black background. Glowing cyan accents.",
+      "imagery": "Smartphone mockup floating in 3D-like space. Heavy use of radial gradients (bg-radial from-cyan-900/20 to-black) behind the phone.",
+      "typography": "Unbounded font. 'ECHO' in massive text."
+    },
+    "echo_features": {
+      "description": "Trio of cards: Triple-Layer Verification, Calculated Resonance, High Accountability.",
+      "style": "Control Room Grid. bg-zinc-900. 1px border-zinc-800. Cyan glowing icons. Hover: border-cyan-500/50 + drop-shadow glow.",
+      "icons": "Use Phosphor Icons (Duotone or Regular) in Cyan."
+    },
+    "echo_signup_form": {
+      "description": "Terminal/Retro-Futurism hybrid. Tech-forward data entry.",
+      "inputs": "bg-black border border-zinc-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500. Chivo font.",
+      "submit_button": "Brushed metal/dark grey with bright Amber or Cyan text. Hover creates a glowing drop shadow.",
+      "success_state": "Displays generated referral code in a monospace font block (bg-zinc-900 border-cyan-500)."
+    },
+    "global_footer": {
+      "description": "Massive dark tech footer mapping to the Echo aesthetic.",
+      "content": "PRIMAL ORIGINS PTY LTD ACN: 697504993. Legal links, T&C, Privacy Policy, Contact.",
+      "style": "bg-black py-24 border-t border-zinc-900 text-zinc-400"
+    }
+  },
+  "testing_requirements": "All interactive and key informational elements MUST include a `data-testid` attribute (e.g., `data-testid='coaching-hero-cta'`).",
+  "tech_stack_notes": "Use standard React (.js), Tailwind CSS, Shadcn UI, and Framer Motion. DO NOT USE .tsx.",
+  "image_urls": {
+    "primal_origins_hero_main": {
+      "url": "https://images.unsplash.com/photo-1573495804658-7885a640fc1c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBjb2FjaGluZyUyMG1lbnRvcnxlbnwwfHx8YmxhY2tfYW5kX3doaXRlfDE3ODMwMzk0NzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Woman at laptop in a coaching session. Use in Primal Origins Hero right side."
+    },
+    "primal_origins_methodology": {
+      "url": "https://images.unsplash.com/photo-1573167659694-342d570ce45a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBjb2FjaGluZyUyMG1lbnRvcnxlbnwwfHx8YmxhY2tfYW5kX3doaXRlfDE3ODMwMzk0NzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Two women engaged in discussion. Use in Methodology section."
+    },
+    "echo_hero_device": {
+      "url": "https://images.unsplash.com/photo-1603735468910-51890e88eae4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTJ8MHwxfHNlYXJjaHwxfHxzbWFydHBob25lJTIwbW9ja3VwJTIwZGFyayUyMHRlY2h8ZW58MHx8fGJsYWNrfDE3ODMwMzk0NzF8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Hand holding dark interface smartphone. Use as the main device mockup in Echo hero."
+    },
+    "echo_feature_biometric": {
+      "url": "https://images.unsplash.com/photo-1654367339087-2f384d47a6e4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDV8MHwxfHNlYXJjaHwyfHxiaW9tZXRyaWMlMjBzZWN1cml0eSUyMGFic3RyYWN0JTIwdGVjaG5vbG9neXxlbnwwfHx8Ymx1ZXwxNzgzMDM5NDcxfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Abstract blue biometric circular lens. Use as background or accent image for the Triple-Layer Verification card."
+    }
+  }
+}
