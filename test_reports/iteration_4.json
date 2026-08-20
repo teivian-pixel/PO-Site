@@ -1,0 +1,41 @@
+{
+  "summary": "Iteration 4 full-stack verification. BACKEND (pytest 12/12 passed, /app/backend/tests/backend_test.py): POST /api/claim-spot returns 200 with ECHO-XXX-XXXXXX referral code, is idempotent by email (case-insensitive), sets referred_by, 422 on bad email, and doc persisted in Mongo beta_signups (verified via motor). Backend logs now show 'Webhook forward status: 200' for every claim-spot call (Google Sheet Apps Script URL is live). POST /api/contact returns 200 with {success:true, id, email_sent:true}; httpx log confirms real dispatch: POST https://integrations.emergentagent.com/api/v1/email/send -> 202 Accepted. Contact message persisted in Mongo contact_messages (name/email/topic/message verified); default topic works; 422 on invalid email and on missing message; HTML/script payload in name+message accepted and escaped server-side without crash. Confirmed /api/contact does NOT call forward_to_webhook (5 contact POSTs produced zero webhook forward log lines; only the 6 claim POSTs did). Historical KeyError: 'EMERGENT_EMAIL_KEY' tracebacks in backend.err.log are from before the env key was added - no longer occurring. FRONTEND (Playwright, 1920x1080 + 390x844): review-spotlight renders above the marquee (spotlight y < first card y), 5 stars, full 375-char Donna Yip quote, 24px serif rgb(245,245,244) on rgba(41,37,36,.5) - no clipping/truncation, readable on desktop and mobile. All 14 marquee card buttons (review-0..13) render with 0 broken images. Lightbox opens (review-lightbox-image, natural width 1080) and closes on Escape. Contact form: topic Select opens and selects 'Echo App', submit -> POST /api/contact 200 with body {\"success\":true,\"email_sent\":true}, success toast 'Message sent. Our team will respond promptly.' shown, all fields cleared and topic reset to General Enquiry; empty submit shows 'Please fill in all fields.'. Claim Your Spot form -> POST /api/claim-spot 200 and claim-success state 'You're in. ... Check your inbox - we've sent your personal invite link and referral code' + 'Spot reserved for <email>' plus toast 'You're on the list. Check your email.'. No JS console errors other than a Radix a11y warning.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/claim-spot", "issue": "Uniqueness loop for referral_code retries 5 times but does not fail/raise if all 5 collide; it silently inserts a possibly duplicate code (extremely low probability, no unique index on referral_code)."},
+      {"endpoint": "/api/contact", "issue": "Webhook forwarding intentionally removed (correct per spec), but contact submissions are now only visible in Mongo + email; no admin/list endpoint exists to retrieve stored contact_messages."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Testimonials marquee", "issue": "Marquee cards animate continuously and only pause on hover, so they are moving targets. Playwright normal click and even hover time out with 'element is not stable' (click only succeeds with force=True). On touch devices there is no hover, so tapping a card to open the lightbox requires hitting a moving element. Suggest pausing the animation on tap/focus-within (and honoring prefers-reduced-motion).", "selector": "[data-testid=\"review-0\"] / .animate-marquee", "priority": "MEDIUM"},
+      {"component": "Review lightbox (Radix Dialog)", "issue": "Console error: 'DialogContent requires a DialogTitle for the component to be accessible for screen reader users.' Add a VisuallyHidden DialogTitle.", "selector": "[data-testid=\"review-lightbox-image\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Contact form submit", "issue": "Frontend ignores the email_sent flag in the response; if the owner notification fails (email_sent:false) the user still sees the full 'Message sent' success toast with no fallback (e.g. 'email us directly'). Cosmetic/robustness only - email_sent was true in all runs.", "affected_selectors": ["[data-testid=\"contact-submit-btn\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Testimonials", "issues": ["Spotlight quote block renders correctly and readably; the 7 marquee PNGs (~5.8 MB total, carried over from iteration 3) are still uncompressed - consider WebP.", "Card review text remains unreadable at 300-340px until enlarged; the spotlight now mitigates this for the strongest review."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Optional: pause the review marquee on tap/focus (and prefers-reduced-motion) so cards are not moving targets on touch devices.",
+    "Optional: add a VisuallyHidden DialogTitle to the review lightbox DialogContent to clear the Radix a11y console error.",
+    "Optional: surface a softer message/fallback when /api/contact returns email_sent:false."
+  ],
+  "critical_code_review_comments": [
+    "server.py claim-spot: the `code` variable relies on the for-loop always executing; add an explicit fallback/raise and a unique index on referral_code to make collision handling deterministic.",
+    "email_utils.py reads EMERGENT_EMAIL_KEY/EMAIL_FROM_NAME with os.environ[...] at import time - a missing key crashes the whole backend at startup (this actually happened earlier per backend.err.log). Prefer os.environ.get with a clear startup log and a graceful email-disabled path.",
+    "Contact.jsx swallows the axios error (`catch {}`) - log or inspect status so 4xx validation errors can be distinguished from network failures."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (12/12 pytest)", "frontend": "100% of requested flows (marquee click needs force due to animation)"},
+  "seed_data_creation": "TEST_-prefixed claim-spot signups and contact_messages created in Mongo (test_database.beta_signups / contact_messages), plus 2 UI submissions (qa.test+iter4@example.com, qa.test+iter4b@example.com) and one claim (qa.test+claim<ts>@example.com). Note: real emails were dispatched to info@primal-origins.com and real rows pushed to the live Google Sheet by these tests.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "N/A - no auth; /app/memory/test_credentials.md not required for this app",
+  "context_for_next_testing_agent": "All 3 iteration-4 features verified working: live Google Sheet webhook (200 on claim-spot), Donna Yip review spotlight above marquee, contact form -> Resend owner email (email_sent:true, provider 202). backend_test.py now has 12 tests incl. Mongo persistence checks. Be aware: running these tests writes real rows to the live Google Sheet and sends real emails to info@primal-origins.com - keep volume low. Marquee card clicks require hover-then-click or force=True because of the continuous CSS animation.",
+  "rca_of_the_issue": "First contact-form run reported 'no success toast' - this was a test artifact: the script waited 6s before reading toasts and sonner had already auto-dismissed. Re-run with polling immediately after submit confirmed the toast text. Marquee click timeout root cause: .animate-marquee runs an infinite transform animation, so Playwright's actionability stability check never passes; the click handler itself works (verified via force click and hover pause state)."
+}

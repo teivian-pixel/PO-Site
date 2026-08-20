@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { REVIEWS } from "@/data/content";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Expand } from "lucide-react";
+import { REVIEWS, SPOTLIGHT } from "@/data/content";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Expand, Quote, Star } from "lucide-react";
 
 export const Testimonials = () => {
   const items = [...REVIEWS, ...REVIEWS];
@@ -22,8 +22,28 @@ export const Testimonials = () => {
         <p className="text-sm text-stone-400 mt-3">Tap any review to read it in full.</p>
       </div>
 
+      <div className="mx-auto max-w-4xl px-6 md:px-10 mb-16">
+        <figure
+          data-testid="review-spotlight"
+          className="relative rounded-3xl border border-white/10 bg-stone-800/50 p-8 md:p-12"
+        >
+          <Quote className="text-echo-amber mb-5" size={40} />
+          <div className="flex text-echo-amber mb-5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={18} fill="currentColor" />
+            ))}
+          </div>
+          <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-stone-100 italic">
+            "{SPOTLIGHT.quote}"
+          </blockquote>
+          <figcaption className="mt-6 font-serif text-lg text-echo-amber">
+            — {SPOTLIGHT.name}
+          </figcaption>
+        </figure>
+      </div>
+
       <div className="relative">
-        <div className="flex gap-6 w-max animate-marquee hover:[animation-play-state:paused]">
+        <div className="flex gap-6 w-max animate-marquee hover:[animation-play-state:paused] focus-within:[animation-play-state:paused] motion-reduce:animate-none motion-reduce:flex-wrap">
           {items.map((src, i) => (
             <button
               key={i}
@@ -47,6 +67,7 @@ export const Testimonials = () => {
 
       <Dialog open={!!active} onOpenChange={(o) => !o && setActive(null)}>
         <DialogContent className="max-w-md bg-transparent border-0 p-0 shadow-none">
+          <DialogTitle className="sr-only">Client review</DialogTitle>
           {active && (
             <img
               src={active}

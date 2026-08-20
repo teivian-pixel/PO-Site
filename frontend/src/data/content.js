@@ -38,6 +38,12 @@ export const METHODOLOGY = [
   },
 ];
 
+export const SPOTLIGHT = {
+  quote:
+    "It was a pleasure working with Teivian. Organized and strategic, he coordinates team efforts effectively and fosters a collaborative environment. His leadership, proactivity, and strong work ethic consistently drive projects toward success \u2014 a driven and warm colleague who genuinely cares about the people he works with. Teivian will be a fantastic asset anywhere he goes!",
+  name: "Donna Yip",
+};
+
 export const REVIEWS = [
   "/reviews/1.webp",
   "/reviews/2.webp",

@@ -77,3 +77,96 @@ class TestContact:
         })
         assert r.status_code == 200
         assert r.json()["success"] is True
+
+    # Iteration 4: contact must dispatch owner notification email via Resend
+    def test_contact_email_sent_true(self, s):
+        r = s.post(f"{API}/contact", json={
+            "name": "TEST_QA Iter4",
+            "email": _unique_email("ct_email"),
+            "topic": "Coaching",
+            "message": "TEST_ iteration4 contact email dispatch check",
+        })
+        assert r.status_code == 200, r.text
+        d = r.json()
+        assert d["success"] is True
+        assert isinstance(d.get("id"), str) and len(d["id"]) > 0
+        assert d.get("email_sent") is True, f"email_sent not true: {d}"
+
+    def test_contact_default_topic_and_validation(self, s):
+        r = s.post(f"{API}/contact", json={
+            "name": "TEST_NoTopic",
+            "email": _unique_email("ct_notopic"),
+            "message": "TEST_ no topic supplied",
+        })
+        assert r.status_code == 200, r.text
+        assert r.json()["success"] is True
+
+        bad = s.post(f"{API}/contact", json={"name": "X", "email": "nope", "message": "hi"})
+        assert bad.status_code == 422
+
+        missing = s.post(f"{API}/contact", json={"name": "X", "email": _unique_email("m")})
+        assert missing.status_code == 422
+
+    def test_contact_html_injection_escaped(self, s):
+        r = s.post(f"{API}/contact", json={
+            "name": "TEST_<script>alert(1)</script>",
+            "email": _unique_email("ct_xss"),
+            "topic": "General Enquiry",
+            "message": "<b>bold</b> & <img src=x>",
+        })
+        assert r.status_code == 200, r.text
+        assert r.json()["success"] is True
+
+
+# ---------- persistence / db ----------
+class TestPersistence:
+    def test_contact_persisted_in_mongo(self, s):
+        import asyncio
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from dotenv import dotenv_values
+
+        env = dotenv_values("/app/backend/.env")
+        email = _unique_email("persist")
+        r = s.post(f"{API}/contact", json={
+            "name": "TEST_Persist",
+            "email": email,
+            "topic": "Echo App",
+            "message": "TEST_ persistence check",
+        })
+        assert r.status_code == 200
+        doc_id = r.json()["id"]
+
+        async def _fetch():
+            cl = AsyncIOMotorClient(env["MONGO_URL"])
+            try:
+                return await cl[env["DB_NAME"]].contact_messages.find_one({"id": doc_id})
+            finally:
+                cl.close()
+
+        doc = asyncio.run(_fetch())
+        assert doc is not None, "contact message not stored"
+        assert doc["email"] == email.lower()
+        assert doc["topic"] == "Echo App"
+        assert doc["message"] == "TEST_ persistence check"
+
+    def test_claim_persisted_in_mongo(self, s):
+        import asyncio
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from dotenv import dotenv_values
+
+        env = dotenv_values("/app/backend/.env")
+        email = _unique_email("claimpersist")
+        r = s.post(f"{API}/claim-spot", json={"name": "TEST_Claim", "email": email})
+        assert r.status_code == 200
+        code = r.json()["referral_code"]
+
+        async def _fetch():
+            cl = AsyncIOMotorClient(env["MONGO_URL"])
+            try:
+                return await cl[env["DB_NAME"]].beta_signups.find_one({"email": email.lower()})
+            finally:
+                cl.close()
+
+        doc = asyncio.run(_fetch())
+        assert doc is not None
+        assert doc["referral_code"] == code

@@ -27,10 +27,12 @@ Content reused from the live site. "Claim Your Spot" form captures Name + Email 
 - Working Contact form with topic select. All flows tested 100% (backend + frontend).
 
 ## Backlog
-- **P0 (blocked on user)**: Google Sheet sync — user must deploy a `doPost` Apps Script Web App and provide the URL for `GOOGLE_SHEET_WEBHOOK_URL`. doPost appends [Date, full_name, referred_by, email, '', '', ''] to Sheet1.
 - **P1**: Inline consultation booking embed; waitlist position counter.
 
-## Outstanding (as of iteration 3)
-- Done: enlarged logos, reverted hero + methodology images, Echo login screen (Welcome 1.png) in phone frame, 7 real Drive reviews (compressed to webp + tap-to-enlarge lightbox), reduced hero spacing.
-- Waiting on user: Apps Script doPost Web App deployment URL to activate Google Sheet sync; user confirmation of Echo phone + review layout.
-- Review images stored at /app/frontend/public/reviews/1..7.webp (source Drive folder 17WGYsiGzo48a9qL5lXSIiexdIkmHua27).
+## Live integrations (as of iteration 4)
+- Google Sheet sync: LIVE. `GOOGLE_SHEET_WEBHOOK_URL` set to the user's Apps Script exec URL; claim-spot signups append (Date, full_name, referred_by, email) → 200 verified. Apps Script trigger generates codes + reward emails.
+- Contact email: LIVE via Emergent-managed Resend. `/api/contact` emails `CONTACT_NOTIFY_EMAIL` (info@primal-origins.com) with the submission (reply-to = submitter). email_sent:true verified (provider 202). Contact no longer forwarded to the signup sheet.
+- Review spotlight: Donna Yip's review pinned as a large featured quote above the review marquee.
+
+## Outstanding
+- Optional: inline consultation booking; waitlist position counter; admin list endpoint for stored contact_messages.

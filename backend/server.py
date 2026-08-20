@@ -11,6 +11,8 @@ from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from typing import List, Optional
 from datetime import datetime, timezone
 import requests
+from html import escape
+from email_utils import send_email
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -20,6 +22,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 WEBHOOK_URL = os.environ.get('GOOGLE_SHEET_WEBHOOK_URL', '').strip()
+CONTACT_NOTIFY_EMAIL = os.environ.get('CONTACT_NOTIFY_EMAIL', '').strip()
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -145,15 +148,35 @@ async def contact(input: ContactCreate):
         "created_at": now,
     }
     await db.contact_messages.insert_one(doc)
-    await forward_to_webhook({
-        "type": "contact",
-        "name": doc["name"],
-        "email": doc["email"],
-        "topic": doc["topic"],
-        "message": doc["message"],
-        "created_at": now,
-    })
-    return {"success": True, "id": doc["id"]}
+
+    email_sent = False
+    if CONTACT_NOTIFY_EMAIL:
+        subject = f"New contact enquiry - {doc['topic']}"
+        html = (
+            '<table role="presentation" width="100%" style="max-width:600px">'
+            '<tr><td style="padding:24px;font-family:Arial,sans-serif;color:#1c1917">'
+            '<h2 style="margin:0 0 16px;font-size:20px">New enquiry from the Primal Origins website</h2>'
+            f'<p style="margin:6px 0"><strong>Name:</strong> {escape(doc["name"])}</p>'
+            f'<p style="margin:6px 0"><strong>Email:</strong> {escape(doc["email"])}</p>'
+            f'<p style="margin:6px 0"><strong>Topic:</strong> {escape(str(doc["topic"]))}</p>'
+            '<p style="margin:16px 0 6px"><strong>Message:</strong></p>'
+            f'<p style="margin:0;white-space:pre-wrap;background:#f5f5f4;padding:14px;border-radius:8px">{escape(doc["message"])}</p>'
+            '<p style="font-size:12px;color:#888;margin-top:24px">Sent by Primal Origins. '
+            'We never ask for your password or card details by email.</p>'
+            '</td></tr></table>'
+        )
+        try:
+            await send_email(
+                to=CONTACT_NOTIFY_EMAIL,
+                subject=subject,
+                html=html,
+                reply_to=doc["email"],
+            )
+            email_sent = True
+        except Exception as e:
+            logger.error(f"Contact notification email failed: {e}")
+
+    return {"success": True, "id": doc["id"], "email_sent": email_sent}
 
 
 app.include_router(api_router)
