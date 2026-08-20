@@ -60,7 +60,7 @@ export const Footer = () => {
           <img
             src={LOGO_WHITE}
             alt="Primal Origins"
-            className="h-10 w-auto"
+            className="h-20 w-auto"
           />
           <p className="mt-4 text-sm leading-relaxed max-w-xs">
             Bridging operational efficiency and human resonance through the

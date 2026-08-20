@@ -7,13 +7,13 @@ export const CoachingHero = () => {
     <section
       id="coaching"
       data-testid="coaching-hero"
-      className="relative min-h-screen bg-sand pt-28 pb-20 overflow-hidden"
+      className="relative bg-sand pt-36 pb-24 overflow-hidden"
     >
       {/* dark bar behind navbar for contrast */}
       <div className="absolute top-0 inset-x-0 h-24 bg-black" aria-hidden />
       <div className="grain-overlay absolute inset-0 pointer-events-none" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center pt-16">
+      <div className="relative mx-auto max-w-7xl px-6 md:px-10 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

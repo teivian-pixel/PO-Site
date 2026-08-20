@@ -31,7 +31,7 @@ export const Navbar = () => {
           : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto max-w-7xl px-6 md:px-10 h-20 flex items-center justify-between">
+      <nav className="mx-auto max-w-7xl px-6 md:px-10 h-24 flex items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           data-testid="nav-logo"
@@ -41,7 +41,7 @@ export const Navbar = () => {
           <img
             src={LOGO_WHITE}
             alt="Primal Origins"
-            className="h-9 w-auto md:h-10"
+            className="h-16 w-auto md:h-20"
           />
         </button>
 

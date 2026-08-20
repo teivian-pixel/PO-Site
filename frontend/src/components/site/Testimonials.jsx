@@ -1,8 +1,12 @@
-import { TESTIMONIALS } from "@/data/content";
-import { Quote } from "lucide-react";
+import { useState } from "react";
+import { REVIEWS } from "@/data/content";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Expand } from "lucide-react";
 
 export const Testimonials = () => {
-  const items = [...TESTIMONIALS, ...TESTIMONIALS];
+  const items = [...REVIEWS, ...REVIEWS];
+  const [active, setActive] = useState(null);
+
   return (
     <section
       data-testid="testimonials-section"
@@ -15,35 +19,44 @@ export const Testimonials = () => {
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white max-w-2xl leading-tight">
           Growth that leaves a mark.
         </h2>
+        <p className="text-sm text-stone-400 mt-3">Tap any review to read it in full.</p>
       </div>
 
       <div className="relative">
-        <div className="flex gap-8 w-max animate-marquee hover:[animation-play-state:paused]">
-          {items.map((t, i) => (
-            <div
+        <div className="flex gap-6 w-max animate-marquee hover:[animation-play-state:paused]">
+          {items.map((src, i) => (
+            <button
               key={i}
-              data-testid={`testimonial-${i}`}
-              className="w-[340px] shrink-0 bg-stone-800/60 border border-white/5 rounded-3xl p-8"
+              onClick={() => setActive(src)}
+              data-testid={`review-${i}`}
+              className="group relative w-[300px] sm:w-[340px] shrink-0 rounded-3xl overflow-hidden border border-white/5 shadow-2xl focus:outline-none focus:ring-2 focus:ring-echo-cyan"
             >
-              <Quote className="text-terracotta mb-4" size={28} />
-              <p className="font-serif text-lg text-stone-100 leading-relaxed italic">
-                "{t.quote}"
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-11 h-11 rounded-full object-cover"
-                />
-                <div>
-                  <p className="text-white text-sm font-medium">{t.name}</p>
-                  <p className="text-stone-400 text-xs">{t.role}</p>
-                </div>
-              </div>
-            </div>
+              <img
+                src={src}
+                alt={`Client review ${(i % REVIEWS.length) + 1}`}
+                className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
+                loading="lazy"
+              />
+              <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <Expand size={15} />
+              </span>
+            </button>
           ))}
         </div>
       </div>
+
+      <Dialog open={!!active} onOpenChange={(o) => !o && setActive(null)}>
+        <DialogContent className="max-w-md bg-transparent border-0 p-0 shadow-none">
+          {active && (
+            <img
+              src={active}
+              alt="Client review"
+              data-testid="review-lightbox-image"
+              className="w-full rounded-3xl"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

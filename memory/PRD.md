@@ -27,11 +27,10 @@ Content reused from the live site. "Claim Your Spot" form captures Name + Email 
 - Working Contact form with topic select. All flows tested 100% (backend + frontend).
 
 ## Backlog
-- **P0**: Wire real Google Sheet webhook (needs Google Apps Script Web App URL from user) — set `GOOGLE_SHEET_WEBHOOK_URL`.
-- **P1**: Email-link flow to activate/deliver referral code (requires email provider, e.g. Resend).
-- **P1**: Admin view of signups; referral leaderboard/waitlist position.
-- **P2**: Dedicated legal pages/routes instead of dialogs; SEO meta/OG tags; analytics events.
+- **P0 (blocked on user)**: Google Sheet sync — user must deploy a `doPost` Apps Script Web App and provide the URL for `GOOGLE_SHEET_WEBHOOK_URL`. doPost appends [Date, full_name, referred_by, email, '', '', ''] to Sheet1.
+- **P1**: Inline consultation booking embed; waitlist position counter.
 
-## Next Tasks
-1. Obtain Apps Script webhook URL and enable Sheet forwarding.
-2. Optional: referral-by-email activation flow.
+## Outstanding (as of iteration 3)
+- Done: enlarged logos, reverted hero + methodology images, Echo login screen (Welcome 1.png) in phone frame, 7 real Drive reviews (compressed to webp + tap-to-enlarge lightbox), reduced hero spacing.
+- Waiting on user: Apps Script doPost Web App deployment URL to activate Google Sheet sync; user confirmation of Echo phone + review layout.
+- Review images stored at /app/frontend/public/reviews/1..7.webp (source Drive folder 17WGYsiGzo48a9qL5lXSIiexdIkmHua27).

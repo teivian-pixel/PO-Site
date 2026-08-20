@@ -74,11 +74,16 @@ export const EchoSection = () => {
               <div className="h-[380px] w-[380px] rounded-full border border-echo-cyan/20 animate-pulse-glow" />
             </div>
             <div className="relative animate-float">
-              <img
-                src={IMAGES.echoDevice}
-                alt="Echo app login screen"
-                className="w-[300px] sm:w-[360px] rounded-[2rem] shadow-2xl shadow-echo-cyan/20"
-              />
+              <div className="mx-auto w-[270px] sm:w-[310px] rounded-[2.75rem] border-[10px] border-zinc-900 bg-zinc-900 shadow-2xl shadow-echo-cyan/25 ring-1 ring-white/10">
+                <div className="relative">
+                  <div className="absolute left-1/2 top-2.5 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full bg-zinc-700" />
+                  <img
+                    src={IMAGES.echoDevice}
+                    alt="Echo app login screen"
+                    className="w-full rounded-[2.1rem]"
+                  />
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>

@@ -3,13 +3,13 @@ export const LOGO_WHITE =
 
 export const IMAGES = {
   coachingHero:
-    "https://images.unsplash.com/photo-1774813958486-4c180dcda729?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwzfHxjb25maWRlbnQlMjBtYW4lMjBwb3J0cmFpdCUyMHRob3VnaHRmdWwlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzgzMDQwNzgxfDA&ixlib=rb-4.1.0&q=85",
+    "https://images.unsplash.com/photo-1573495804658-7885a640fc1c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBjb2FjaGluZyUyMG1lbnRvcnxlbnwwfHx8YmxhY2tfYW5kX3doaXRlfDE3ODMwMzk0NzF8MA&ixlib=rb-4.1.0&q=85",
   methodology:
-    "https://images.unsplash.com/photo-1758519288358-86c504767112?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "https://images.unsplash.com/photo-1683208231012-0995e510b219?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
   about:
     "https://images.unsplash.com/photo-1573497491208-6b1acb260507?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
   echoDevice:
-    "https://static.prod-images.emergentagent.com/jobs/1d68302f-d439-4f06-b6a4-8af621b92b9e/images/37255b205a86676a1950b174c8d4ede4a6e914aa6bfee2d19e146e564a38c667.jpeg",
+    "https://customer-assets-lxgj4vgw.emergentagent.net/job_echo-redesign-2/artifacts/r6x50qnf_Welcome%201.png",
 };
 
 export const CONSULT_URL =
@@ -36,6 +36,16 @@ export const METHODOLOGY = [
     title: "1:1 Consultation",
     body: "Personalised strategies to help you obtain clarity, confidence, and direction — no matter what stage of life you're in.",
   },
+];
+
+export const REVIEWS = [
+  "/reviews/1.webp",
+  "/reviews/2.webp",
+  "/reviews/3.webp",
+  "/reviews/4.webp",
+  "/reviews/5.webp",
+  "/reviews/6.webp",
+  "/reviews/7.webp",
 ];
 
 export const TESTIMONIALS = [
