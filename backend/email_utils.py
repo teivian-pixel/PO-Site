@@ -12,9 +12,11 @@ load_dotenv(Path(__file__).parent / '.env')
 
 logger = logging.getLogger(__name__)
 
-EMAIL_BASE_URL = "https://integrations.emergentagent.com"
-EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
-EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
+RESEND_API_KEY = os.environ["RESEND_API_KEY"]
+# e.g. "Primal Origins <hello@primalorigins.com>" - the address must be on a domain
+# you've verified in Resend. Use "onboarding@resend.dev" for testing before your
+# domain is verified.
+EMAIL_FROM = os.environ["EMAIL_FROM"]
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
 
 _SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
@@ -92,13 +94,13 @@ def _assert_safe_email(subject: str, html: str) -> None:
 
 async def send_email(*, to: str, subject: str, html: str, reply_to: str | None = None) -> str | None:
     _assert_safe_email(subject, html)
-    payload = {"to": [to], "subject": subject, "html": html, "from_name": EMAIL_FROM_NAME}
+    payload = {"from": EMAIL_FROM, "to": [to], "subject": subject, "html": html}
     if reply_to or EMAIL_REPLY_TO:
-        payload["contact_email"] = reply_to or EMAIL_REPLY_TO
+        payload["reply_to"] = reply_to or EMAIL_REPLY_TO
     async with httpx.AsyncClient(timeout=30) as client:
         resp = await client.post(
-            f"{EMAIL_BASE_URL}/api/v1/email/send",
-            headers={"X-Email-Key": EMAIL_KEY},
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
             json=payload,
         )
     resp.raise_for_status()
