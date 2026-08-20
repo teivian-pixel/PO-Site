@@ -40,5 +40,5 @@ Content reused from the live site. "Claim Your Spot" form captures Name + Email 
 - Terms & Privacy Policy converted from footer modal dialogs to standalone routed pages (`/terms`, `/privacy`) so the Echo mobile app can deep-link to them directly. New files: `pages/Terms.jsx`, `pages/Privacy.jsx`; routes registered in `App.js`; Footer.jsx now links via react-router `Link` instead of Dialog triggers.
 - Verified via screenshot_tool: nav order/labels, testimonials scroll-to, and both new legal page URLs render correctly.
 
-## Outstanding
+- Legal page polish: added auto-computed "Last Updated" date (today's date, recalculates on each visit), doubled logo size (h-12 → h-24) on `/terms` and `/privacy`, and print-friendly styles (Print button + print:bg-white/print:text-black, header hidden on print).
 - Optional: inline consultation booking; waitlist position counter; admin list endpoint for stored contact_messages.
