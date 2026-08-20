@@ -125,6 +125,7 @@ async def claim_spot(input: ClaimCreate):
         "referred_by": (doc["referred_by"] or ""),
         "email": doc["email"],
         "date": now,
+        "referral_code": doc["referral_code"],
     })
 
     return ClaimResponse(**{k: doc[k] for k in ["id", "name", "email", "referral_code", "referred_by", "created_at"]})
