@@ -1,50 +1,5 @@
-import { CONSULT_URL, NAV_LINKS, COMPANY, LOGO_WHITE, TERMS, PRIVACY } from "@/data/content";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-const LegalDialog = ({ label, title, sections, testid }) => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <button
-        data-testid={testid}
-        className="text-left text-zinc-400 hover:text-echo-cyan transition-colors"
-      >
-        {label}
-      </button>
-    </DialogTrigger>
-    <DialogContent className="max-w-2xl bg-zinc-950 border-zinc-800 text-zinc-300 max-h-[80vh] overflow-y-auto">
-      <DialogHeader>
-        <DialogTitle className="font-display text-2xl text-white">
-          {title}
-        </DialogTitle>
-        <DialogDescription className="sr-only">
-          {title} for Primal Origins and Echo.
-        </DialogDescription>
-      </DialogHeader>
-      <div className="mt-2 space-y-5 text-sm leading-relaxed">
-        {sections.map((s, i) => (
-          <div key={i}>
-            <p className="font-semibold text-white">{s.h}</p>
-            {s.p && <p className="mt-1.5">{s.p}</p>}
-            {s.li && (
-              <ul className="mt-2 list-disc pl-5 space-y-1.5">
-                {s.li.map((item, j) => (
-                  <li key={j}>{item}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-    </DialogContent>
-  </Dialog>
-);
+import { Link } from "react-router-dom";
+import { CONSULT_URL, NAV_LINKS, COMPANY, LOGO_WHITE } from "@/data/content";
 
 export const Footer = () => {
   const go = (href) =>
@@ -93,20 +48,22 @@ export const Footer = () => {
           </p>
           <ul className="space-y-3 text-sm">
             <li>
-              <LegalDialog
-                label="Terms & Conditions"
-                title="Terms and Conditions"
-                sections={TERMS}
-                testid="footer-terms-link"
-              />
+              <Link
+                to="/terms"
+                data-testid="footer-terms-link"
+                className="hover:text-echo-cyan transition-colors"
+              >
+                Terms & Conditions
+              </Link>
             </li>
             <li>
-              <LegalDialog
-                label="Privacy Policy"
-                title="Privacy Policy"
-                sections={PRIVACY}
-                testid="footer-privacy-link"
-              />
+              <Link
+                to="/privacy"
+                data-testid="footer-privacy-link"
+                className="hover:text-echo-cyan transition-colors"
+              >
+                Privacy Policy
+              </Link>
             </li>
             <li>
               <a

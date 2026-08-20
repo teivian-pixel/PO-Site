@@ -9,6 +9,7 @@ export const Testimonials = () => {
 
   return (
     <section
+      id="testimonials"
       data-testid="testimonials-section"
       className="bg-stone-900 py-24 md:py-28 overflow-hidden"
     >

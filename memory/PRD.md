@@ -34,5 +34,11 @@ Content reused from the live site. "Claim Your Spot" form captures Name + Email 
 - Contact email: LIVE via Emergent-managed Resend. `/api/contact` emails `CONTACT_NOTIFY_EMAIL` (info@primal-origins.com) with the submission (reply-to = submitter). email_sent:true verified (provider 202). Contact no longer forwarded to the signup sheet.
 - Review spotlight: Donna Yip's review pinned as a large featured quote above the review marquee.
 
+## Session Update (2026-08-20)
+- Nav reordered to Methodology, Testimonials, About, Echo, Contact; "Coaching" link removed (only scrolled to top, redundant with logo click).
+- Added `id="testimonials"` anchor to Testimonials.jsx so nav can jump directly to it.
+- Terms & Privacy Policy converted from footer modal dialogs to standalone routed pages (`/terms`, `/privacy`) so the Echo mobile app can deep-link to them directly. New files: `pages/Terms.jsx`, `pages/Privacy.jsx`; routes registered in `App.js`; Footer.jsx now links via react-router `Link` instead of Dialog triggers.
+- Verified via screenshot_tool: nav order/labels, testimonials scroll-to, and both new legal page URLs render correctly.
+
 ## Outstanding
 - Optional: inline consultation booking; waitlist position counter; admin list endpoint for stored contact_messages.

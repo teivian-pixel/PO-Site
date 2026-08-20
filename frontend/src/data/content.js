@@ -16,8 +16,8 @@ export const CONSULT_URL =
   "https://stan.store/teivian/p/book-a-11-coaching-call-with-me-f2jlbk8o";
 
 export const NAV_LINKS = [
-  { label: "Coaching", href: "#coaching" },
   { label: "Methodology", href: "#methodology" },
+  { label: "Testimonials", href: "#testimonials" },
   { label: "About", href: "#about" },
   { label: "Echo", href: "#echo" },
   { label: "Contact", href: "#contact" },
