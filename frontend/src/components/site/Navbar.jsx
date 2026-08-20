@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { NAV_LINKS, CONSULT_URL } from "@/data/content";
+import { NAV_LINKS, CONSULT_URL, LOGO_WHITE } from "@/data/content";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -33,13 +33,16 @@ export const Navbar = () => {
     >
       <nav className="mx-auto max-w-7xl px-6 md:px-10 h-20 flex items-center justify-between">
         <button
-          onClick={() => go("#home")}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           data-testid="nav-logo"
-          className="flex items-center gap-2 text-white"
+          className="flex items-center"
+          aria-label="Primal Origins home"
         >
-          <span className="font-display text-lg font-800 tracking-tight">
-            PRIMAL<span className="text-echo-cyan">.</span>ORIGINS
-          </span>
+          <img
+            src={LOGO_WHITE}
+            alt="Primal Origins"
+            className="h-9 w-auto md:h-10"
+          />
         </button>
 
         <div className="hidden lg:flex items-center gap-8">

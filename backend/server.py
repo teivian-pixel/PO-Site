@@ -118,11 +118,10 @@ async def claim_spot(input: ClaimCreate):
 
     await forward_to_webhook({
         "type": "beta_signup",
-        "name": doc["name"],
+        "full_name": doc["name"],
+        "referred_by": (doc["referred_by"] or ""),
         "email": doc["email"],
-        "referral_code": doc["referral_code"],
-        "referred_by": doc["referred_by"] or "",
-        "created_at": now,
+        "date": now,
     })
 
     return ClaimResponse(**{k: doc[k] for k in ["id", "name", "email", "referral_code", "referred_by", "created_at"]})

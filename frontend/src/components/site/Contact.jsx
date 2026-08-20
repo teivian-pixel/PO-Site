@@ -73,7 +73,7 @@ export const Contact = () => {
             </div>
             <div className="flex items-center gap-3 text-zinc-300">
               <Mail size={18} className="text-echo-cyan" />
-              hello@primal-origins.com
+              {COMPANY.email}
             </div>
           </div>
         </div>

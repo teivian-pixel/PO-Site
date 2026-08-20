@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, Check, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -10,7 +10,12 @@ export const ClaimForm = () => {
   const [form, setForm] = useState({ name: "", email: "", referral_code: "" });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) setForm((f) => ({ ...f, referral_code: ref.toUpperCase() }));
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -26,7 +31,7 @@ export const ClaimForm = () => {
         referral_code: form.referral_code.trim() || null,
       });
       setResult(data);
-      toast.success("You're on the list. Welcome to Echo.");
+      toast.success("You're on the list. Check your email.");
     } catch (err) {
       const msg =
         err?.response?.data?.detail?.[0]?.msg ||
@@ -36,13 +41,6 @@ export const ClaimForm = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const copyCode = () => {
-    navigator.clipboard.writeText(result.referral_code);
-    setCopied(true);
-    toast.success("Referral code copied.");
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -63,7 +61,7 @@ export const ClaimForm = () => {
             data-testid="claim-form"
           >
             <div className="flex items-center gap-2 text-echo-cyan text-xs uppercase tracking-[0.25em]">
-              <ShieldCheck size={16} /> Beta access
+              <ShieldCheck size={16} /> Early Access
             </div>
             <h3 className="font-display text-2xl text-white tracking-tight">
               Claim Your Spot
@@ -135,41 +133,26 @@ export const ClaimForm = () => {
             className="text-center space-y-5"
           >
             <div className="mx-auto w-14 h-14 rounded-full bg-echo-cyan/10 border border-echo-cyan/40 flex items-center justify-center text-echo-cyan">
-              <Check size={26} />
+              <MailCheck size={26} />
             </div>
             <h3 className="font-display text-2xl text-white">You're in.</h3>
             <p className="text-sm text-zinc-400">
-              Welcome to the Echo beta, {result.name.split(" ")[0]}. Share your
-              personal referral code to move up the list.
+              Welcome to Echo Early Access, {result.name.split(" ")[0]}. Check
+              your inbox — we've sent your personal invite link and referral
+              code. Share it to move up the list and unlock founder perks.
             </p>
-
-            <div className="rounded-md border border-echo-cyan/40 bg-zinc-900 p-4">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 mb-2">
-                Your referral code
-              </p>
-              <div className="flex items-center justify-between gap-3">
-                <code
-                  data-testid="referral-code-value"
-                  className="font-mono text-echo-cyan text-lg tracking-wider"
-                >
-                  {result.referral_code}
-                </code>
-                <button
-                  onClick={copyCode}
-                  data-testid="copy-referral-btn"
-                  className="text-zinc-400 hover:text-echo-cyan transition-colors"
-                  aria-label="Copy code"
-                >
-                  {copied ? <Check size={18} /> : <Copy size={18} />}
-                </button>
+            <div className="rounded-md border border-zinc-800 bg-zinc-900 p-4 text-left">
+              <div className="flex items-center gap-2 text-zinc-300 text-sm">
+                <Check size={16} className="text-echo-cyan" /> Spot reserved for{" "}
+                {result.email}
               </div>
+              {form.referral_code && (
+                <div className="flex items-center gap-2 text-zinc-300 text-sm mt-2">
+                  <Check size={16} className="text-echo-cyan" /> Referral{" "}
+                  {form.referral_code} applied
+                </div>
+              )}
             </div>
-
-            {result.referred_by && (
-              <p className="text-xs text-zinc-500">
-                Referred by {result.referred_by}
-              </p>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

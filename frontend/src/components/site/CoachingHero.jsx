@@ -5,7 +5,7 @@ import { IMAGES, CONSULT_URL } from "@/data/content";
 export const CoachingHero = () => {
   return (
     <section
-      id="home"
+      id="coaching"
       data-testid="coaching-hero"
       className="relative min-h-screen bg-sand pt-28 pb-20 overflow-hidden"
     >

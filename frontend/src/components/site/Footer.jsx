@@ -1,25 +1,14 @@
-import { CONSULT_URL, NAV_LINKS, COMPANY } from "@/data/content";
+import { CONSULT_URL, NAV_LINKS, COMPANY, LOGO_WHITE, TERMS, PRIVACY } from "@/data/content";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const TERMS = `By accessing and using the Primal Origins website, coaching services, and the Echo platform, you agree to be bound by these Terms and Conditions. Our coaching services are provided for personal and organisational development purposes and do not constitute medical, legal, or financial advice.
-
-Echo is a high-accountability connection platform currently operating in a beta phase. Access is subject to identity verification and adherence to our community protocols. Accounts found to be fraudulent, automated, or in breach of our accountability standards may be suspended or removed.
-
-All content, frameworks, and the proprietary Primal Methodology remain the intellectual property of PRIMAL ORIGINS PTY LTD. Unauthorised reproduction is prohibited. These terms are governed by the laws of Victoria, Australia.`;
-
-const PRIVACY = `PRIMAL ORIGINS PTY LTD is committed to protecting your privacy. We collect personal information such as your name and email address when you book a consultation, submit an enquiry, or join the Echo beta.
-
-For Echo, we may collect additional verification data (identity and biometric information) solely for the purpose of multi-layered identity verification and to maintain the integrity of our community. This data is handled with government-grade security standards and is never sold to third parties.
-
-You may request access to, correction of, or deletion of your personal data at any time by contacting us. We retain data only as long as necessary to provide our services and comply with legal obligations, in accordance with the Australian Privacy Principles.`;
-
-const LegalDialog = ({ label, title, body, testid }) => (
+const LegalDialog = ({ label, title, sections, testid }) => (
   <Dialog>
     <DialogTrigger asChild>
       <button
@@ -34,9 +23,24 @@ const LegalDialog = ({ label, title, body, testid }) => (
         <DialogTitle className="font-display text-2xl text-white">
           {title}
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          {title} for Primal Origins and Echo.
+        </DialogDescription>
       </DialogHeader>
-      <div className="whitespace-pre-line text-sm leading-relaxed mt-2">
-        {body}
+      <div className="mt-2 space-y-5 text-sm leading-relaxed">
+        {sections.map((s, i) => (
+          <div key={i}>
+            <p className="font-semibold text-white">{s.h}</p>
+            {s.p && <p className="mt-1.5">{s.p}</p>}
+            {s.li && (
+              <ul className="mt-2 list-disc pl-5 space-y-1.5">
+                {s.li.map((item, j) => (
+                  <li key={j}>{item}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
       </div>
     </DialogContent>
   </Dialog>
@@ -53,9 +57,11 @@ export const Footer = () => {
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10 py-16 grid gap-12 md:grid-cols-4">
         <div className="md:col-span-1">
-          <p className="font-display text-lg text-white tracking-tight">
-            PRIMAL<span className="text-echo-cyan">.</span>ORIGINS
-          </p>
+          <img
+            src={LOGO_WHITE}
+            alt="Primal Origins"
+            className="h-10 w-auto"
+          />
           <p className="mt-4 text-sm leading-relaxed max-w-xs">
             Bridging operational efficiency and human resonance through the
             Primal Methodology and the Echo application.
@@ -89,8 +95,8 @@ export const Footer = () => {
             <li>
               <LegalDialog
                 label="Terms & Conditions"
-                title="Terms & Conditions"
-                body={TERMS}
+                title="Terms and Conditions"
+                sections={TERMS}
                 testid="footer-terms-link"
               />
             </li>
@@ -98,7 +104,7 @@ export const Footer = () => {
               <LegalDialog
                 label="Privacy Policy"
                 title="Privacy Policy"
-                body={PRIVACY}
+                sections={PRIVACY}
                 testid="footer-privacy-link"
               />
             </li>
@@ -131,10 +137,10 @@ export const Footer = () => {
             </li>
             <li>
               <a
-                href="mailto:hello@primal-origins.com"
+                href={`mailto:${COMPANY.email}`}
                 className="hover:text-echo-cyan transition-colors"
               >
-                hello@primal-origins.com
+                {COMPANY.email}
               </a>
             </li>
           </ul>

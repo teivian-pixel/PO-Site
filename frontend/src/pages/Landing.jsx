@@ -10,9 +10,13 @@ import { Footer } from "@/components/site/Footer";
 
 export default function Landing({ initialHash }) {
   useEffect(() => {
-    if (initialHash) {
-      const el = document.querySelector(`#${initialHash}`);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 300);
+    const hash = window.location.hash?.replace("#", "") || initialHash;
+    if (hash) {
+      const scroll = () => {
+        const el = document.querySelector(`#${hash}`);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      };
+      setTimeout(scroll, 400);
     }
   }, [initialHash]);
 

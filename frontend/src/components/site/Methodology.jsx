@@ -11,7 +11,6 @@ export const Methodology = () => {
       data-testid="methodology-section"
       className="relative bg-sand py-24 md:py-32"
     >
-      <div id="coaching" className="absolute -top-24" aria-hidden />
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <motion.div

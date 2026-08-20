@@ -55,7 +55,7 @@ export const EchoSection = () => {
                 data-testid="echo-join-beta-btn"
                 className="rounded-md bg-echo-cyan px-7 py-3.5 font-semibold text-black hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] transition-shadow"
               >
-                Join the Beta Phase
+                Find Real Connection
               </a>
               <span className="inline-flex items-center rounded-md border border-zinc-800 px-5 py-3.5 text-sm text-zinc-400">
                 No bots. No fakes. Verified only.
@@ -74,13 +74,11 @@ export const EchoSection = () => {
               <div className="h-[380px] w-[380px] rounded-full border border-echo-cyan/20 animate-pulse-glow" />
             </div>
             <div className="relative animate-float">
-              <div className="rounded-[2.5rem] border border-zinc-800 bg-zinc-900 p-2 shadow-2xl shadow-echo-cyan/10">
-                <img
-                  src={IMAGES.echoDevice}
-                  alt="Echo app interface"
-                  className="w-[260px] sm:w-[300px] h-[520px] object-cover rounded-[2rem]"
-                />
-              </div>
+              <img
+                src={IMAGES.echoDevice}
+                alt="Echo app login screen"
+                className="w-[300px] sm:w-[360px] rounded-[2rem] shadow-2xl shadow-echo-cyan/20"
+              />
             </div>
           </motion.div>
         </div>
@@ -135,7 +133,7 @@ export const EchoSection = () => {
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-echo-amber mb-4">
-              Limited beta cohort
+              Limited Access
             </p>
             <h2 className="font-display text-4xl sm:text-5xl text-white tracking-tighter leading-tight">
               Claim your spot now.
