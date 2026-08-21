@@ -23,6 +23,7 @@ db = client[os.environ['DB_NAME']]
 
 WEBHOOK_URL = os.environ.get('GOOGLE_SHEET_WEBHOOK_URL', '').strip()
 CONTACT_NOTIFY_EMAIL = os.environ.get('CONTACT_NOTIFY_EMAIL', '').strip()
+TURNSTILE_SECRET_KEY = os.environ.get('TURNSTILE_SECRET_KEY', '').strip()
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -39,6 +40,7 @@ class ClaimCreate(BaseModel):
     name: str
     email: EmailStr
     referral_code: Optional[str] = None
+    turnstile_token: Optional[str] = None
 
 
 class ClaimResponse(BaseModel):
@@ -65,6 +67,26 @@ def generate_referral_code(name: str) -> str:
     return f"ECHO-{prefix}-{token}"
 
 
+async def verify_turnstile(token: str) -> bool:
+    if not TURNSTILE_SECRET_KEY:
+        # Not configured yet; don't block signups, just skip the check.
+        return True
+    if not token:
+        return False
+    try:
+        def _post():
+            return requests.post(
+                "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+                data={"secret": TURNSTILE_SECRET_KEY, "response": token},
+                timeout=10,
+            )
+        resp = await asyncio.to_thread(_post)
+        return bool(resp.json().get("success"))
+    except Exception as e:
+        logger.error(f"Turnstile verification failed: {e}")
+        return False
+
+
 async def forward_to_webhook(payload: dict):
     if not WEBHOOK_URL:
         logger.info("No webhook configured; skipping forward.")
@@ -86,6 +108,9 @@ async def root():
 
 @api_router.post("/claim-spot", response_model=ClaimResponse)
 async def claim_spot(input: ClaimCreate):
+    if not await verify_turnstile(input.turnstile_token):
+        raise HTTPException(status_code=400, detail="Verification failed. Please try again.")
+
     existing = await db.beta_signups.find_one({"email": input.email.lower()})
     if existing:
         return ClaimResponse(

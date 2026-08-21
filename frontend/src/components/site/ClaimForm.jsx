@@ -5,11 +5,30 @@ import { Loader2, ShieldCheck, Check, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const TURNSTILE_SITE_KEY = process.env.REACT_APP_TURNSTILE_SITE_KEY;
 
 export const ClaimForm = () => {
   const [form, setForm] = useState({ name: "", email: "", referral_code: "" });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useState(() => `turnstile-${Math.random().toString(36).slice(2)}`)[0];
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    const renderWidget = () => {
+      if (window.turnstile) {
+        window.turnstile.render(`#${turnstileRef}`, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => setTurnstileToken(token),
+          "expired-callback": () => setTurnstileToken(""),
+        });
+      } else {
+        setTimeout(renderWidget, 200);
+      }
+    };
+    renderWidget();
+  }, [turnstileRef]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -23,12 +42,17 @@ export const ClaimForm = () => {
       toast.error("Please enter your name and email.");
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      toast.error("Please complete the verification check.");
+      return;
+    }
     setLoading(true);
     try {
       const { data } = await axios.post(`${API}/claim-spot`, {
         name: form.name.trim(),
         email: form.email.trim(),
         referral_code: form.referral_code.trim() || null,
+        turnstile_token: turnstileToken || null,
       });
       setResult(data);
       toast.success("You're on the list. Check your email.");
@@ -108,6 +132,8 @@ export const ClaimForm = () => {
                 placeholder="ECHO-XXX-XXXXXX"
               />
             </div>
+
+            {TURNSTILE_SITE_KEY && <div id={turnstileRef} className="flex justify-center" />}
 
             <button
               type="submit"
