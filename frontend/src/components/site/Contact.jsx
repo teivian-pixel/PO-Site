@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Loader2, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import {
 import { COMPANY } from "@/data/content";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const TURNSTILE_SITE_KEY = process.env.REACT_APP_TURNSTILE_SITE_KEY;
 
 const TOPICS = [
   "1:1 Consultation",
@@ -28,6 +29,25 @@ export const Contact = () => {
     message: "",
   });
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useState(() => `turnstile-contact-${Math.random().toString(36).slice(2)}`)[0];
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    const renderWidget = () => {
+      if (window.turnstile) {
+        window.turnstile.render(`#${turnstileRef}`, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => setTurnstileToken(token),
+          "expired-callback": () => setTurnstileToken(""),
+        });
+      } else {
+        setTimeout(renderWidget, 200);
+      }
+    };
+    renderWidget();
+  }, [turnstileRef]);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -35,11 +55,17 @@ export const Contact = () => {
       toast.error("Please fill in all fields.");
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      toast.error("Please complete the verification check.");
+      return;
+    }
     setLoading(true);
     try {
-      await axios.post(`${API}/contact`, form);
+      await axios.post(`${API}/contact`, { ...form, turnstile_token: turnstileToken || null });
       toast.success("Message sent. Our team will respond promptly.");
       setForm({ name: "", email: "", topic: "General Enquiry", message: "" });
+      setSent(true);
+      setTimeout(() => setSent(false), 6000);
     } catch {
       toast.error("Could not send your message. Please try again.");
     } finally {
@@ -148,6 +174,8 @@ export const Contact = () => {
               placeholder="How can we help?"
             />
           </div>
+
+          {TURNSTILE_SITE_KEY && <div id={turnstileRef} className="flex justify-center" />}
 
           <button
             type="submit"

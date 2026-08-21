@@ -58,6 +58,7 @@ class ContactCreate(BaseModel):
     email: EmailStr
     topic: Optional[str] = "General Enquiry"
     message: str
+    turnstile_token: Optional[str] = None
 
 
 # ---------- Helpers ----------
@@ -164,6 +165,9 @@ async def validate_referral(code: str):
 
 @api_router.post("/contact")
 async def contact(input: ContactCreate):
+    if not await verify_turnstile(input.turnstile_token):
+        raise HTTPException(status_code=400, detail="Verification failed. Please try again.")
+
     now = datetime.now(timezone.utc).isoformat()
     doc = {
         "id": secrets.token_hex(8),
